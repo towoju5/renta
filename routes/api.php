@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\DojaController;
 use App\Http\Controllers\FlutterwaveController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,3 +25,15 @@ Route::middleware('auth:sanctum')->post('user', [AuthController::class, 'updateU
 
 Route::post('login',    [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
+
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::post('send-otp',     [DojaController::class, 'verify']);
+    Route::post('verify-otp',   [DojaController::class, 'validate_otp']);
+});
+
+
+Route::fallback(function(){
+    return get_error_response([
+        'message' => 'Page Not Found. If error persists, contact support'
+    ], 404);
+});

@@ -3,18 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DojaController extends Controller
 {
 
     public function verify(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'phone' => 'required|numeric',
         ], [
             'phone.required' => 'Phone Number is required!',
             'phone.numeric' => 'Invalid Phone Number provided!',
         ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status'    => false,
+                'message'   => 'validation error',
+                'errors'    => $validator->errors()
+            ], 401);
+        }
 
         $resp = [
             'channel'       => 'whatsapp',
@@ -23,18 +32,8 @@ class DojaController extends Controller
         ];
 
         $result = $this->process("messaging/otp", "POST", $resp);
-
-        if (array_key_exists('entity', $result) && !empty($result)) {
-            $data = [
-                'status'    => true,
-                'code'      =>  http_response_code(),
-                'message'   =>  "Verification code Sent Successfully",
-                'data'      =>  to_array($result)
-            ];
-        } else {
-            $data = get_error_response($result, 400);
-        }
-        return response()->json($data);
+        return get_success_response($result);
+        
     }
 
     public function validate_otp(Request $request)
@@ -52,7 +51,7 @@ class DojaController extends Controller
             $mainResult = to_array($result['entity']);
             if ($mainResult['valid'] == true) {
                 $data = [
-                    'status'    => 'success',
+                    'status'    => true,
                     'code'      =>  http_response_code(),
                     'message'   =>  "O.T.P verified Successfully",
                     'data'      =>  to_array($result)
@@ -78,7 +77,7 @@ class DojaController extends Controller
         $headers[] = 'Authorization: ' . getenv("DOJA_PRIVATE_KEY");
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        $result = to_array(curl_exec($ch));
+        return $result = to_array(curl_exec($ch));
         curl_close($ch);
         return json_decode($result, true);
     }

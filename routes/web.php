@@ -16,3 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::fallback(function(){
+    return get_error_response([
+        'message' => 'Page Not Found. If error persists, contact support'
+    ], 404);
+});
