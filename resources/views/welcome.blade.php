@@ -169,7 +169,9 @@
 <body data-new-gr-c-s-check-loaded="14.1085.0" data-gr-ext-installed="">
     <header>
         <div class="logo">
-            <img class="logo" src="https://www.renta.se/wp-content/uploads/2018/04/valkoinen_png.png" alt="logo">
+            <a href="{{ url('/') }}">
+                <img class="logo" src="https://www.renta.se/wp-content/uploads/2018/04/valkoinen_png.png" alt="logo">
+            </a>
         </div>
     </header>
 
