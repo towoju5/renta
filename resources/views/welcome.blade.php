@@ -186,6 +186,9 @@
                 <img src="https://i.pravatar.cc/150?img=3" alt="">
                 <img src="https://i.pravatar.cc/150?img=3" alt="">
                 <img src="https://i.pravatar.cc/150?img=3" alt="">
+                <img src="https://i.pravatar.cc/150?img=3" alt="">
+                <img src="https://i.pravatar.cc/150?img=3" alt="">
+                <img src="https://i.pravatar.cc/150?img=3" alt="">
             </div>
             <p>Join 5k other creatives and get early access to beta.</p>
         </div>
@@ -239,5 +242,4 @@
         })
     </script>
 </body>
-
 </html>
