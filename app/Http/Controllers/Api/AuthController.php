@@ -53,6 +53,7 @@ class AuthController extends Controller
                 'country'       =>  'required',
                 'firstName'     =>  'required|min:3',
                 'lastName'      =>  'required|min:3',
+                'device_id'     =>  'required|unique:users,device_id',
                 'phoneNumber'   =>  'required|unique:users,phoneNumber',
             ]);
 
@@ -112,15 +113,12 @@ class AuthController extends Controller
             //Validated
             $validateUser = Validator::make($request->all(), 
             [
-                'city'          =>  'required',
-                'state'         =>  'required',
-                'zipCode'       =>  'required|int|min:5',
-                'idType'        =>  'required',
-                'idNumber'      =>  'required',
-                'line1'         =>  'required',
-                'houseNumber'   =>  'required',
-                'bvn'           =>  'required',
-                'idImage'       =>  'required', //"|image:jpeg, png, bmp, gif, svg"
+                'email'         =>  'required|email|unique:users,email',
+                'password'      =>  'required|min:6',
+                'country'       =>  'required',
+                'firstName'     =>  'required|min:3',
+                'lastName'      =>  'required|min:3',
+                'phoneNumber'   =>  'required|unique:users,phoneNumber',
             ]);
 
             if($validateUser->fails()){
@@ -133,15 +131,15 @@ class AuthController extends Controller
 
             $user = User::where('id', $request->user()->id)->first();
             if(!empty($user)):
-                $user->city          =  $request->city;
-                $user->state         =  $request->state;
-                $user->zipCode       =  $request->zipCode;
-                $user->idType        =  $request->idType;
-                $user->idNumber      =  $request->idNumber;
-                $user->line1         =  $request->line1;
-                $user->houseNumber   =  $request->houseNumber;
-                $user->bvn           =  $request->bvn;
-                $user->idImageUrl    =  $request->idImage;
+                $user->email         =  $request->email;
+                $user->country       =  $request->country;
+                $user->firstName     =  $request->firstName;
+                $user->lastName      =  $request->lastName;
+                $user->phoneNumber   =  $request->phoneNumber;
+                $user->name          =  "$request->firstName $request->lastName";
+                if($request->has('password')):
+                    $user->password      =  Hash::make($request->password);
+                endif;
                 $user->save();
             endif;
 
