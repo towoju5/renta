@@ -119,6 +119,7 @@ class AuthController extends Controller
                 'firstName'     =>  'required|min:3',
                 'lastName'      =>  'required|min:3',
                 'phoneNumber'   =>  'required|unique:users,phoneNumber',
+                'profile_image' =>  'nullable|image:jpg, jpeg, png, bmp, gif, svg, or webp'
             ]);
 
             if($validateUser->fails()){
