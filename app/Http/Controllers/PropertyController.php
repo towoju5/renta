@@ -81,9 +81,14 @@ class PropertyController extends Controller
     public function show($id)
     {
         try {
-            //code...
+            $property = PropertyModel::where('id', $id)->first();
+            if($property):
+                return get_success_response(["msg" => $property]);
+            else :
+                return get_error_response(["error" => "Property not found"], 404);
+            endif;
         } catch (\Throwable $th) {
-            //throw $th;
+            return get_error_response(["error" => $th->getMessage()], 500);
         }
     }
 
