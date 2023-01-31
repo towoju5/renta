@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PropertyModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -55,7 +56,7 @@ class PropertyController extends Controller
             ], 401);
         }
 
-        $addProperty = PropertyController::create([
+        $addProperty = PropertyModel::create([
             'property_type'     =>  $request->property_type,
             'property_location'     =>  $request->property_location,
             'property_price'        =>  $request->property_price,
@@ -79,7 +80,11 @@ class PropertyController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     /**
@@ -102,7 +107,39 @@ class PropertyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validateUser = Validator::make(
+            $request->all(),
+            [
+                'property_type'         =>  'required',
+                'property_location'     =>  'required',
+                'property_price'        =>  'required',
+                'property_description'  =>  'required',
+                'property_features'     =>  'required',
+                'property_name'         =>  'required',
+            ]
+        );
+
+        if ($validateUser->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'validation error',
+                'errors' => $validateUser->errors()
+            ], 401);
+        }
+
+        $property = PropertyModel::where('id', $id)->first();
+        $property->property_type         =  $request->property_type;
+        $property->property_location     =  $request->property_location;
+        $property->property_price        =  $request->property_price;
+        $property->property_description  =  $request->property_description;
+        $property->property_features     =  $request->property_features;
+        $property->property_name         =  $request->property_name;
+
+        if($property->save()):
+            return get_success_response(["msg" => "Property added successfully"]);
+        else: 
+            return get_error_response(["error" => "Unable to add property"], 400);
+        endif;
     }
 
     /**
