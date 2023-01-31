@@ -20,7 +20,7 @@ class CreatePropertyModelsTable extends Migration
             $table->string('property_location');
             $table->string('property_price');
             $table->string('property_description');
-            $table->string('property_features');
+            $table->json('property_features');
             $table->string('property_name');
             $table->timestamps();
             $table->timestamp("deleted_at")->nullable();

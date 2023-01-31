@@ -98,7 +98,7 @@ class PropertyController extends Controller
     public function list()
     {
         try {
-            $property = PropertyModel::where(['user_id' => auth()->id()])->first()->makeHidden(['user_id', 'created_at', 'deleted_at']);
+            $property = PropertyModel::where(['user_id' => auth()->id()])->get();
             if($property):
                 return get_success_response($property);
             else :

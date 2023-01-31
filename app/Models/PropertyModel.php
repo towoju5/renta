@@ -15,6 +15,10 @@ class PropertyModel extends Model
         "property_features" =>  "array"
     ];
 
+    protected $hidden = [
+        'user_id', 'created_at', 'deleted_at'
+    ];
+
     public function user(){
         return $this->hasMany(User::class);
     }
