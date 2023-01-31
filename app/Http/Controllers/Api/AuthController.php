@@ -131,13 +131,28 @@ class AuthController extends Controller
 
             $user = User::where('id', $request->user()->id)->first();
             if(!empty($user)):
-                $user->email         =  $request->email;
-                $user->country       =  $request->country;
-                $user->firstName     =  $request->firstName;
-                $user->lastName      =  $request->lastName;
-                $user->phoneNumber   =  $request->phoneNumber;
-                $user->name          =  "$request->firstName $request->lastName";
-                if($request->has('password')):
+                if($request->has('email') && !empty($request->email)):
+                    $user->email         =  $request->email;
+                endif;
+                if($request->has('country') && !empty($request->country)):
+                    $user->country       =  $request->country;
+                endif;
+                if($request->has('address') && !empty($request->address)):
+                    $user->address       =  $request->address;
+                endif;
+                if($request->has('firstName') && !empty($request->firstName)):
+                    $user->firstName     =  $request->firstName;
+                endif;
+                if($request->has('lastName') && !empty($request->lastName)):
+                    $user->lastName      =  $request->lastName;
+                endif;
+                if($request->has('phoneNumber') && !empty($request->phoneNumber)):
+                    $user->phoneNumber   =  $request->phoneNumber;
+                endif;
+                if($request->has('firstName') && !empty($request->firstName)):
+                    $user->name          =  "$request->firstName $request->lastName";
+                endif;
+                if($request->has('password') && !empty($request->password)):
                     $user->password      =  Hash::make($request->password);
                 endif;
                 $user->save();
