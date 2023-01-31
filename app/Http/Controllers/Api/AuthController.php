@@ -174,6 +174,21 @@ class AuthController extends Controller
     }
 
     /**
+     * Get user wallet balance.
+     */
+
+     public function balance()
+     {
+        $user = User::findorFail(auth()->id());
+        $wallet = $user->getWallet("NGN");
+        $result = [
+            "currency"  =>  $wallet->currency,
+            "balance"   =>  number_format($wallet->balance, 2)
+        ];
+        return get_success_response($result);
+     }
+
+    /**
      * Receive user email address and generate reset token
      */
     public function forgot_password()

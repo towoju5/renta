@@ -11,8 +11,8 @@ class UserVerificationController extends Controller
 {
     public function getStatus()
     {
-        $user = UserVerification::where('user_id', auth()->id());
-        if ($user->verification_status == 1) {
+        $user = UserVerification::where('user_id', auth()->id())->first();
+        if ($user && $user->verification_status == 1) {
             return get_success_response(['msg' => 'User as been successfully verified', 'data' => $user]);
         }
         return get_error_response(["error" => "User has not been verified or verification not successful"]);

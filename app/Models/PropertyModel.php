@@ -9,4 +9,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PropertyModel extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+    protected $casts = [
+        "property_features" =>  "array"
+    ];
+
+    public function user(){
+        return $this->hasMany(User::class);
+    }
 }

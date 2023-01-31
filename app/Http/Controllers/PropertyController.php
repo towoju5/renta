@@ -57,6 +57,7 @@ class PropertyController extends Controller
         }
 
         $addProperty = PropertyModel::create([
+            'user_id'   =>  auth()->id(),
             'property_type'     =>  $request->property_type,
             'property_location'     =>  $request->property_location,
             'property_price'        =>  $request->property_price,
@@ -81,7 +82,7 @@ class PropertyController extends Controller
     public function show($id)
     {
         try {
-            $property = PropertyModel::where('id', $id)->first();
+            $property = PropertyModel::where(['id' => $id, 'user_id' => auth()->id()])->first();
             if($property):
                 return get_success_response(["msg" => $property]);
             else :
@@ -155,6 +156,15 @@ class PropertyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $property = PropertyModel::where(['id' => $id, 'user_id' => auth()->id()])->first();
+            if($property->delete()):
+                return get_success_response(["msg" => "Property deleted successfully"]);
+            else :
+                return get_error_response(["error" => "Unable to delete property"], 404);
+            endif;
+        } catch (\Throwable $th) {
+            return get_error_response(["error" => $th->getMessage()], 500);
+        }
     }
 }

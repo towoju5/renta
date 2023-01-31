@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\DojaController;
 use App\Http\Controllers\FlutterwaveController;
+use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\UserVerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,8 +29,20 @@ Route::post('login',    [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
-    Route::post('send-otp',     [DojaController::class, 'verify']);
-    Route::post('verify-otp',   [DojaController::class, 'validate_otp']);
+    Route::post('send-otp',         [DojaController::class, 'verify']);
+    Route::post('verify-otp',       [DojaController::class, 'validate_otp']);
+    Route::get("wallet/balance",    [AuthController::class, 'balance']);
+
+    Route::group(["prefix" => 'verify'],    function(){
+        Route::get('status',    [UserVerificationController::class, 'getStatus']);
+        Route::post('submit',   [UserVerificationController::class, 'verify']);
+    });
+
+    Route::group(["prefix" => 'property'],    function(){
+        Route::get('preview',       [PropertyController::class, 'show']);
+        Route::post('submit',       [PropertyController::class, 'store']);
+        Route::post('update/{id}',  [PropertyController::class, 'update']);
+    });
 });
 
 
