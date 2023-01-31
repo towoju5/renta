@@ -31,6 +31,9 @@ Route::post('register', [AuthController::class, 'register']);
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('send-otp',         [DojaController::class, 'verify']);
     Route::post('verify-otp',       [DojaController::class, 'validate_otp']);
+    /**
+     * Get user wallet balance
+     */
     Route::get("wallet/balance",    [AuthController::class, 'balance']);
 
     Route::group(["prefix" => 'verify'],    function(){
