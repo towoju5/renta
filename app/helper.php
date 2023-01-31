@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Storage;
 use Propaganistas\LaravelPhone\PhoneNumber;
 
 
@@ -97,3 +98,20 @@ if (!function_exists('get_success_response')) {
         return response()->json($resp, 200);
     }
 }
+
+if (!function_exists('save_image')) {
+    function save_image($path, $image, $customName = NULL)
+    {
+       // $fileOrignalName = $image->getClientOriginalName();
+       $newName = rand(1009, 9999) . (sha1(time())) . '.' . $image->getClientOriginalExtension();
+       $image_path = '/storage/' . $path;
+       if (!Storage::exists($image_path)) {
+          Storage::makeDirectory($image_path);
+       }
+       $path = public_path() . $image_path;
+       $filename = $customName ?? $newName;
+       $image->move($path, $filename);
+       $paths = $image_path . '/' . $filename;
+       return $paths;
+    }
+ }
