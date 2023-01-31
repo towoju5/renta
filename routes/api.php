@@ -39,7 +39,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     });
 
     Route::group(["prefix" => 'property'],    function(){
-        Route::get('preview',       [PropertyController::class, 'show']);
+        Route::get('preview/{id}',  [PropertyController::class, 'show']);
+        Route::get('list',          [PropertyController::class, 'list']);
         Route::post('submit',       [PropertyController::class, 'store']);
         Route::post('update/{id}',  [PropertyController::class, 'update']);
     });

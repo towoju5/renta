@@ -92,6 +92,22 @@ class PropertyController extends Controller
             return get_error_response(["error" => $th->getMessage()], 500);
         }
     }
+    /**
+     * Get all user property
+     */
+    public function list()
+    {
+        try {
+            $property = PropertyModel::where(['user_id' => auth()->id()])->first()->makeHidden(['user_id', 'created_at', 'deleted_at']);
+            if($property):
+                return get_success_response($property);
+            else :
+                return get_error_response(["error" => "Property not found"], 404);
+            endif;
+        } catch (\Throwable $th) {
+            return get_error_response(["error" => $th->getMessage()], 500);
+        }
+    }
 
     /**
      * Show the form for editing the specified resource.
