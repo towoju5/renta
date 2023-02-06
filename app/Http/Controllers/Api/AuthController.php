@@ -4,27 +4,32 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
         try {
-            $validateUser = Validator::make($request->all(), 
-            [
-                'email' => 'required|email',
-                'password' => 'required'
-            ]);
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'email' => 'required|email',
+                    'password' => 'required'
+                ]
+            );
 
-            if($validateUser->fails()){
+            if ($validateUser->fails()) {
                 return get_error_response($validateUser->errors(), 401);
             }
 
-            if(!Auth::attempt($request->only(['email', 'password']))){
+            if (!Auth::attempt($request->only(['email', 'password']))) {
                 return get_error_response([
                     'message' => 'Email & Password does not match with our record.',
                 ], 401);
@@ -36,7 +41,6 @@ class AuthController extends Controller
                 'message'   => 'User Logged In Successfully',
                 'data'      => $user
             ], 200);
-
         } catch (\Throwable $th) {
             return get_error_response($th->getMessage(), 500);
         }
@@ -46,18 +50,20 @@ class AuthController extends Controller
     {
         try {
             //Validated
-            $validateUser = Validator::make($request->all(), 
-            [
-                'email'         =>  'required|email|unique:users,email',
-                'password'      =>  'required|min:6',
-                'country'       =>  'required',
-                'firstName'     =>  'required|min:3',
-                'lastName'      =>  'required|min:3',
-                'device_id'     =>  'required|unique:users,device_id',
-                'phoneNumber'   =>  'required|unique:users,phoneNumber',
-            ]);
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'email'         =>  'required|email|unique:users,email',
+                    'password'      =>  'required|min:6',
+                    'country'       =>  'required',
+                    'firstName'     =>  'required|min:3',
+                    'lastName'      =>  'required|min:3',
+                    'device_id'     =>  'required|unique:users,device_id',
+                    'phoneNumber'   =>  'required|unique:users,phoneNumber',
+                ]
+            );
 
-            if($validateUser->fails()){
+            if ($validateUser->fails()) {
                 return response()->json([
                     'status' => false,
                     'message' => 'validation error',
@@ -67,10 +73,10 @@ class AuthController extends Controller
 
             $phone = format_phone($request->phoneNumber, $request->country);
             $checkphoneNumber = User::where("phoneNumber", $phone)->count();
-            if($checkphoneNumber > 0){
+            if ($checkphoneNumber > 0) {
                 return response()->json([
                     'status' => false,
-                    'message'=> 'validation error',
+                    'message' => 'validation error',
                     'errors' => [
                         "phone" => [
                             "Phone Number Already Exists"
@@ -98,7 +104,6 @@ class AuthController extends Controller
                 'message' => 'User Created Successfully',
                 'data'    => $user
             ], 200);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -111,18 +116,19 @@ class AuthController extends Controller
     {
         try {
             //Validated
-            $validateUser = Validator::make($request->all(), 
-            [
-                'email'         =>  'required|email|unique:users,email',
-                'password'      =>  'required|min:6',
-                'country'       =>  'required',
-                'firstName'     =>  'required|min:3',
-                'lastName'      =>  'required|min:3',
-                'phoneNumber'   =>  'required|unique:users,phoneNumber',
-                'profile_image' =>  'nullable|image:jpg, jpeg, png, bmp, gif, svg, or webp'
-            ]);
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'email'         =>  'required|email|unique:users,email',
+                    'password'      =>  'required|min:6',
+                    'country'       =>  'required',
+                    'firstName'     =>  'required|min:3',
+                    'lastName'      =>  'required|min:3',
+                    'phoneNumber'   =>  'required|unique:users,phoneNumber',
+                ]
+            );
 
-            if($validateUser->fails()){
+            if ($validateUser->fails()) {
                 return response()->json([
                     'status' => false,
                     'message' => 'validation error',
@@ -131,29 +137,14 @@ class AuthController extends Controller
             }
 
             $user = User::where('id', $request->user()->id)->first();
-            if(!empty($user)):
-                if($request->has('email') && !empty($request->email)):
-                    $user->email         =  $request->email;
-                endif;
-                if($request->has('country') && !empty($request->country)):
-                    $user->country       =  $request->country;
-                endif;
-                if($request->has('address') && !empty($request->address)):
-                    $user->address       =  $request->address;
-                endif;
-                if($request->has('firstName') && !empty($request->firstName)):
-                    $user->firstName     =  $request->firstName;
-                endif;
-                if($request->has('lastName') && !empty($request->lastName)):
-                    $user->lastName      =  $request->lastName;
-                endif;
-                if($request->has('phoneNumber') && !empty($request->phoneNumber)):
-                    $user->phoneNumber   =  $request->phoneNumber;
-                endif;
-                if($request->has('firstName') && !empty($request->firstName)):
-                    $user->name          =  "$request->firstName $request->lastName";
-                endif;
-                if($request->has('password') && !empty($request->password)):
+            if (!empty($user)) :
+                $user->email         =  $request->email;
+                $user->country       =  $request->country;
+                $user->firstName     =  $request->firstName;
+                $user->lastName      =  $request->lastName;
+                $user->phoneNumber   =  $request->phoneNumber;
+                $user->name          =  "$request->firstName $request->lastName";
+                if ($request->has('password')) :
                     $user->password      =  Hash::make($request->password);
                 endif;
                 $user->save();
@@ -164,7 +155,6 @@ class AuthController extends Controller
                 'message'   => 'User updated Successfully',
                 'data'      => $user
             ], 200);
-
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -173,34 +163,55 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Get user wallet balance.
-     */
-
-     public function balance()
-     {
-        $user = User::findorFail(auth()->id());
-        $wallet = $user->getWallet("NGN");
-        $result = [
-            "currency"  =>  $wallet->currency,
-            "balance"   =>  number_format($wallet->balance, 2)
-        ];
-        return get_success_response($result);
-     }
+    public function getUser()
+    {
+        $user = User::where('id', request()->user()->id)->first();
+        return get_success_response($user);
+    }
 
     /**
      * Receive user email address and generate reset token
      */
-    public function forgot_password()
+    public function forgot_password(Request $request)
     {
-        //
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return get_success_response(['status' => __($status)]);
+        }
+        return get_error_response(['email' => __($status)]);
     }
 
     /**
      * Verify if reset token is valid and reset user password
      */
-    public function reset_password()
+    public function reset_password(Request $request)
     {
-        //
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('status', __($status))
+            : back()->withErrors(['email' => [__($status)]]);
     }
 }
