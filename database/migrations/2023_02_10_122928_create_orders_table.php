@@ -15,6 +15,8 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->enum('order_type', ['cr', 'dr'])->default('dr');
+            $table->string("order_item", ['payment', 'withdrawal', 'deposit']);
             $table->timestamps();
         });
     }

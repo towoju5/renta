@@ -24,7 +24,11 @@ class CreateUsersTable extends Migration
             $table->string('lastName');
             $table->string('device_id');
             $table->string('phoneNumber');
+            $table->boolean('phone_verify');
+            $table->boolean('email_verify');
+            $table->string('profile_image');
             $table->string('api_token');
+            $table->string('device_id')->nullable();
             $table->enum('user_plan', ['basic', 'premium'])->default('basic');
             $table->rememberToken();
             $table->timestamps();

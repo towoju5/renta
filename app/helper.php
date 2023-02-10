@@ -99,6 +99,12 @@ if (!function_exists('get_success_response')) {
     }
 }
 
+if(!function_exists('add_order')){
+    function add_order(){
+        //$user->notify(new InvoicePaid($invoice));
+    }
+}
+
 if (!function_exists('save_image')) {
     function save_image($path, $image, $customName = NULL)
     {
