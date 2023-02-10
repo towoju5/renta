@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('device_id');
             $table->string('phoneNumber');
             $table->string('api_token');
+            $table->enum('user_plan', ['basic', 'premium'])->default('basic');
             $table->rememberToken();
             $table->timestamps();
         });

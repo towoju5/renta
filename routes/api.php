@@ -28,9 +28,13 @@ Route::middleware('auth:sanctum')->post('user', [AuthController::class, 'updateU
 Route::post('login',    [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
+Route::post('password/reset/submit',    [AuthController::class, 'reset_password']);
+Route::post('password/forgot',          [AuthController::class, 'forgot_password']);
+
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('send-otp',         [DojaController::class, 'verify']);
     Route::post('verify-otp',       [DojaController::class, 'validate_otp']);
+    Route::get('me',                [AuthController::class, 'getUser']);
     /**
      * Get user wallet balance
      */

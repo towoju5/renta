@@ -147,6 +147,9 @@ class AuthController extends Controller
                 if ($request->has('password')) :
                     $user->password      =  Hash::make($request->password);
                 endif;
+                if ($request->has('profile_image')) :
+                    $user->profile_image      =  save_image('profile', $request->profile_image);
+                endif;
                 $user->save();
             endif;
 
@@ -180,8 +183,8 @@ class AuthController extends Controller
             $request->only('email')
         );
 
-        if ($status === Password::RESET_LINK_SENT) {
-            return get_success_response(['status' => __($status)]);
+        if ($status) {
+            return get_success_response(['status' => "Password reset token successfully sent to your mail"]);
         }
         return get_error_response(['email' => __($status)]);
     }
@@ -209,9 +212,9 @@ class AuthController extends Controller
                 event(new PasswordReset($user));
             }
         );
-
-        return $status === Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('status', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+        if($status) {
+            return get_success_response(['msg' => "Password updated successfully"]);
+        }
+        return get_error_response(["error" => "Unable to update password, please contact support"]);
     }
 }
