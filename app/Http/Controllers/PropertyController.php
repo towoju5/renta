@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PropertyModel;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\PropertyModel;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\PropertyNotification;
 
 class PropertyController extends Controller
 {
@@ -67,6 +69,8 @@ class PropertyController extends Controller
         ]);
 
         if($addProperty):
+            $user = User::find(auth()->id());
+            $user->notify(new PropertyNotification($addProperty));
             return get_success_response(["msg" => "Property added successfully"]);
         else: 
             return get_error_response(["error" => "Unable to add property"], 400);
