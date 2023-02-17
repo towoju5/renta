@@ -18,6 +18,7 @@ class CreatePlansTable extends Migration
             $table->string('plan_name');
             $table->decimal('plan_price');
             $table->timestamps();
+            $table->timestamp("deleted_at")->nullable();
         });
     }
 
