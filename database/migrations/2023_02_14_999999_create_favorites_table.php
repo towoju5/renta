@@ -18,7 +18,6 @@ class CreateFavoritesTable extends Migration
             $table->bigInteger('user_id');
             $table->bigInteger('favorite_id');
             $table->timestamps();
-
             $table->primary('id');
         });
     }
