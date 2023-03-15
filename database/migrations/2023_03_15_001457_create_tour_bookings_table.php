@@ -15,7 +15,10 @@ class CreateTourBookingsTable extends Migration
     {
         Schema::create('tour_bookings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->string('date_time');
             $table->timestamps();
+            $table->timestamp('deleted_at');
         });
     }
 

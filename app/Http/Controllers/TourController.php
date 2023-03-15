@@ -23,21 +23,21 @@ class TourController extends Controller
         ]);
 
         return get_success_response([
-            "msg"   =>  "slot booked successfully",
+            "msg"   =>  "Slot booked successfully",
             "data"  =>  $booking
         ]);
     }
 
-    public function bookings()
+    public function bookings(Request $request)
     {
-        $bookings = TourBooking::orderBy('created_at', 'desc')->get();
+        $bookings = TourBooking::where('user_id', $request->user()->id)->orderBy('created_at', 'desc')->get();
         return get_success_response($bookings);
     }
 
     public function delete($id)
     {
-        if(TourBooking::destroy([$id])){
-            return get_success_response($id);
+        if($slot = TourBooking::destroy([$id])){
+            return get_success_response($slot);
         }
     }
 }
