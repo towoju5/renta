@@ -19,7 +19,8 @@ class TourController extends Controller
         }
 
         $booking = TourBooking::create([
-            'user_id'   =>  $request->date_time
+            'user_id'   =>  $request->user()->id,
+            'date_time' =>  $request->date_time
         ]);
 
         return get_success_response([

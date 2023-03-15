@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\DojaController;
 use App\Http\Controllers\FlutterwaveController;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\TourController;
 use App\Http\Controllers\UserVerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,9 +47,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     });
 
     Route::group(["prefix" => 'tour-booking'],    function(){
-        Route::get('/',                 [TourController::class, 'verify']);
-        Route::post('/',                [TourController::class, 'verify']);
-        Route::delete('delete/{id}',    [TourController::class, 'verify']);
+        Route::get('/',                 [TourController::class, 'bookings']);
+        Route::post('/',                [TourController::class, 'book_tour']);
+        Route::delete('delete/{id}',    [TourController::class, 'delete']);
     });
 
     Route::group(["prefix" => 'property'],    function(){
