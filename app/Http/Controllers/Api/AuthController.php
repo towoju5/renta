@@ -172,6 +172,18 @@ class AuthController extends Controller
         return get_success_response($user);
     }
 
+    public function balance(Request $request)
+    {
+        $currency = "NGN";
+        $user = User::where('id', $request->user()->id)->first();
+        $wallet = $user->getWallet($currency);
+        $balance = $wallet->balance;
+        return get_success_response([
+            "currency"  => $currency,
+            "balance"   =>  number_format($balance, 2)
+        ]);
+    }
+
     /**
      * Receive user email address and generate reset token
      */

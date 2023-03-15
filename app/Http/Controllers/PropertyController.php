@@ -96,6 +96,24 @@ class PropertyController extends Controller
             return get_error_response(["error" => $th->getMessage()], 500);
         }
     }
+    
+    /**
+     * Get all properties
+     */
+    public function all_properties()
+    {
+        try {
+            $property = PropertyModel::paginate(25);
+            if($property):
+                return get_success_response($property);
+            else :
+                return get_error_response(["error" => "Property not found"], 404);
+            endif;
+        } catch (\Throwable $th) {
+            return get_error_response(["error" => $th->getMessage()], 500);
+        }
+    }
+    
     /**
      * Get all user property
      */

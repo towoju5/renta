@@ -12,7 +12,8 @@ class PropertyModel extends Model
 
     protected $guarded = [];
     protected $casts = [
-        "property_features" =>  "array"
+        "property_features" =>  "array",
+        "property_images" =>  "array"
     ];
 
     protected $hidden = [

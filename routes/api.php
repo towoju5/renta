@@ -47,12 +47,14 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
     Route::group(["prefix" => 'property'],    function(){
         Route::get('preview/{id}',  [PropertyController::class, 'show']);
-        Route::get('list',          [PropertyController::class, 'list']);
+        Route::get('list',          [PropertyController::class, 'all_properties']);
+        Route::get('my-list',       [PropertyController::class, 'list']);
         Route::post('submit',       [PropertyController::class, 'store']);
         Route::post('update/{id}',  [PropertyController::class, 'update']);
     });
 });
 
+require_once('admin/api.php');
 
 Route::fallback(function(){
     return get_error_response([
