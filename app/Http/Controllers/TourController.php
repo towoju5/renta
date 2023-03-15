@@ -15,7 +15,7 @@ class TourController extends Controller
         ]);
 
         if($validators->fails()) {
-            return $validators->errors();
+            return get_error_response($validators->errors(), 400);
         }
 
         $booking = TourBooking::create([
@@ -38,7 +38,9 @@ class TourController extends Controller
     public function delete($id)
     {
         if($slot = TourBooking::destroy([$id])){
-            return get_success_response($slot);
+            return get_success_response(["msg" => "Slot deleted successfully"]);
+        } else {
+            return get_error_response(["error" => "Unable to process request"]);
         }
     }
 }

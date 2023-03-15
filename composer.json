@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.5",
         "moecasts/laravel-wallet": "^1.3",
         "munafio/chatify": "^1.5",
+        "norris1z/admin_user_chat": "^1.2",
         "propaganistas/laravel-phone": "^4.4"
     },
     "require-dev": {

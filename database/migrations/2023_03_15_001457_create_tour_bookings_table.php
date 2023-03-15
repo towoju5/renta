@@ -18,7 +18,7 @@ class CreateTourBookingsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('date_time');
             $table->timestamps();
-            $table->timestamp('deleted_at');
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 
