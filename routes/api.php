@@ -45,6 +45,12 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post('submit',   [UserVerificationController::class, 'verify']);
     });
 
+    Route::group(["prefix" => 'tour-booking'],    function(){
+        Route::get('/',                 [TourController::class, 'verify']);
+        Route::post('/',                [TourController::class, 'verify']);
+        Route::delete('delete/{id}',    [TourController::class, 'verify']);
+    });
+
     Route::group(["prefix" => 'property'],    function(){
         Route::get('preview/{id}',  [PropertyController::class, 'show']);
         Route::get('list',          [PropertyController::class, 'all_properties']);
