@@ -27,4 +27,17 @@ class TourController extends Controller
             "data"  =>  $booking
         ]);
     }
+
+    public function bookings()
+    {
+        $bookings = TourBooking::orderBy('created_at', 'desc')->get();
+        return get_success_response($bookings);
+    }
+
+    public function delete($id)
+    {
+        if(TourBooking::destroy([$id])){
+            return get_success_response($id);
+        }
+    }
 }
